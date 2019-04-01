@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class JournalEntry implements Serializable {
-    public static final String TAG = "JournalEntry";
-    public static final int INVALID_ID = -1;
+    public static final String TAG        = "JournalEntry";
+    public static final int    INVALID_ID = -1;
 
     private String date, entryText, image;
     private int dayRating, id;
@@ -39,10 +39,22 @@ public class JournalEntry implements Serializable {
         initializeDate();
     }
 
+    public JournalEntry(String entryText, long epochTimeSeconds, int rating) {
+        this.entryText = entryText;
+        this.dayRating = rating;
+        Date       date       = new Date(epochTimeSeconds * 1000);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+        this.setDate(dateFormat.format(date));
+
+        this.id = INVALID_ID;
+        this.image = "";
+    }
+
     public JournalEntry(String csvString) {
         String[] values = csvString.split(",");
         // check to see if we have the right string
-        if(values.length == 5) {
+        if (values.length == 5) {
             // handle missing numbers or strings in the number position
             try {
                 this.id = Integer.parseInt(values[0]);
@@ -59,7 +71,7 @@ public class JournalEntry implements Serializable {
             // preserve entry structure
             this.entryText = values[3].replace("~@", ",");
             // placeholder for image will maintain csv's structure even with no provided image
-            this.image = values[4].equals("unused") ? "": values[4];
+            this.image = values[4].equals("unused") ? "" : values[4];
         }
     }
 
@@ -74,7 +86,7 @@ public class JournalEntry implements Serializable {
                              date,
                              dayRating,
                              entryText.replace(",", "~@"),
-                             image == "" ? "unused": image);
+                             image == "" ? "unused" : image);
     }
 
     private void initializeDate() {
@@ -101,7 +113,7 @@ public class JournalEntry implements Serializable {
     }
 
     public Uri getImage() {
-        if(!image.equals("")) {
+        if (!image.equals("")) {
             return Uri.parse(image);
         } else {
             return null;
