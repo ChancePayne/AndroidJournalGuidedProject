@@ -2,6 +2,9 @@ package com.lambdaschool.journalguidedproject;
 
 import android.net.Uri;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -139,5 +142,25 @@ public class JournalEntry implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    // S03M03-12 write method to convert entry into jsonObject
+    public JSONObject toJsonObject() {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("date", date);
+            jsonObject.put("entry_text", entryText);
+            jsonObject.put("image", image);
+            jsonObject.put("day_rating", dayRating);
+            return jsonObject;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            try {
+                return new JSONObject(String.format("{\"date\":\"%s\",\"entry_text\":\"%s\",\"image\":\"%s\",\"day_rating\":%d}", date, entryText, image, dayRating));
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        }
     }
 }

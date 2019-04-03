@@ -197,7 +197,7 @@ public class JournalListActivity extends AppCompatActivity {
     }
 
     private JournalEntry createJournalEntry() {
-        JournalEntry entry = new JournalEntry(JournalEntry.INVALID_ID);
+        JournalEntry entry = new JournalEntry();
 
         /*DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date       date       = new Date();

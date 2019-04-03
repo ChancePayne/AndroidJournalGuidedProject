@@ -17,7 +17,7 @@ public class JournalStorageManager {
     }
 
     public void createEntry(JournalEntry entry) {
-        // TODO: Add create to network
+        JournalFirebaseDAO.createEntry(entry);
     }
 
     public void updateEntry(JournalEntry entry) {
