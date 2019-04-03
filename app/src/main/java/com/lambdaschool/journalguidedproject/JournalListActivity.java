@@ -216,7 +216,7 @@ public class JournalListActivity extends AppCompatActivity {
 
     /*private TextView createEntryView(final JournalEntry entry) {
         TextView view = new TextView(context);
-        view.setText(entry.getDate() + " - " + entry.getDayRating());
+        view.setText(entry.getStringDate() + " - " + entry.getDayRating());
         view.setPadding(15, 15, 15, 15);
         view.setTextSize(22);
         view.setOnClickListener(new View.OnClickListener() {

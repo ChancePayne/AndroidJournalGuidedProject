@@ -21,6 +21,10 @@ public class JournalStorageManager {
     }
 
     public void updateEntry(JournalEntry entry) {
-        // TODO: Add update to network
+        JournalFirebaseDAO.updateEntry(entry);
+    }
+
+    public void deleteEntry(JournalEntry entry) {
+        JournalFirebaseDAO.deleteEntry(entry);
     }
 }

@@ -38,11 +38,11 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         entry = (JournalEntry) intent.getSerializableExtra(JournalEntry.TAG);
         if(entry == null) {
-            entry = new JournalEntry(JournalEntry.INVALID_ID);
+            entry = new JournalEntry();
         }
 
         dateView = findViewById(R.id.journal_entry_date);
-        dateView.setText(entry.getDate());
+        dateView.setText(entry.getStringDate());
 
         entryTextView = findViewById(R.id.journal_entry_text);
         entryTextView.setText(entry.getEntryText());
@@ -99,6 +99,19 @@ public class DetailsActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 startActivityForResult(intent, IMAGE_REQUEST_CODE);
+            }
+        });
+
+        findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final JournalStorageManager journalStorageManager = new JournalStorageManager(v.getContext());
+                journalStorageManager.deleteEntry(entry);
+
+                Intent resultIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, resultIntent);
+
+                finish();
             }
         });
     }

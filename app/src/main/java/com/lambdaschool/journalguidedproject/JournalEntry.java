@@ -15,10 +15,10 @@ public class JournalEntry implements Serializable {
     public static final String INVALID_ID = "";
 
     // S03M03-8 Change ID to a string
-    private String date, entryText, image, id;
-    private int dayRating;
+    private String entryText, image, id;
+    private int dayRating, date;
 
-    public JournalEntry(String date, String entryText, String image, int dayRating, String id) {
+    public JournalEntry(int date, String entryText, String image, int dayRating, String id) {
         this.date = date;
         this.entryText = entryText;
         this.image = image;
@@ -46,16 +46,14 @@ public class JournalEntry implements Serializable {
     public JournalEntry(String entryText, long epochTimeSeconds, int rating) {
         this.entryText = entryText;
         this.dayRating = rating;
-        Date       date       = new Date(epochTimeSeconds * 1000);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-        this.setDate(dateFormat.format(date));
+        this.setDate((int) epochTimeSeconds);
 
         this.id = INVALID_ID;
         this.image = "";
     }
 
-    public JournalEntry(String csvString) {
+    /*public JournalEntry(String csvString) {
         String[] values = csvString.split(",");
         // check to see if we have the right string
         if (values.length == 5) {
@@ -77,7 +75,7 @@ public class JournalEntry implements Serializable {
             // placeholder for image will maintain csv's structure even with no provided image
             this.image = values[4].equals("unused") ? "" : values[4];
         }
-    }
+    }*/
 
     boolean areEqual(JournalEntry a) {
         return this.id == a.id && this.getDayRating() == a.getDayRating();
@@ -94,17 +92,21 @@ public class JournalEntry implements Serializable {
     }
 
     private void initializeDate() {
+        this.date = (int) (System.currentTimeMillis() / 1000);
+    }
+
+    public String getStringDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date       date       = new Date();
 
-        this.setDate(dateFormat.format(date));
+        return dateFormat.format(date);
     }
 
-    public String getDate() {
+    public int getDate() {
         return this.date;
     }
 
-    public void setDate(String date) {
+    public void setDate(int date) {
         this.date = date;
     }
 

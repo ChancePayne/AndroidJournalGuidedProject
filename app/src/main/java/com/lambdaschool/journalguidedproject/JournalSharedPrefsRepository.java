@@ -66,7 +66,7 @@ public class JournalSharedPrefsRepository {
     }
 
     // read an existing entry
-    public JournalEntry readEntry(int id) {
+    /*public JournalEntry readEntry(int id) {
         String entryCsv = prefs.getString(ENTRY_ITEM_KEY_PREFIX + id, "invalid");
         if (!entryCsv.equals("invalid")) {
             JournalEntry entry = new JournalEntry(entryCsv);
@@ -74,10 +74,10 @@ public class JournalSharedPrefsRepository {
         } else {
             return null;
         }
-    }
+    }*/
 
     // read all entries
-    public ArrayList<JournalEntry> readAllEntries() {
+    /*public ArrayList<JournalEntry> readAllEntries() {
         // read list of entry ids
         final ArrayList<String> listOfIds = getListOfIds();
 
@@ -87,7 +87,7 @@ public class JournalSharedPrefsRepository {
             entryList.add(readEntry(Integer.parseInt(id)));
         }
         return entryList;
-    }
+    }*/
 
     // edit an existing entry
     public void updateEntry(JournalEntry entry) {

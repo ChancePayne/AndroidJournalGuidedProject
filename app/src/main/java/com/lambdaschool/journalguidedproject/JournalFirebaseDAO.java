@@ -19,8 +19,8 @@ public class JournalFirebaseDAO {
     private static final String URL_ENDING     = ".json";
 
     private static final String READ_ALL_URL = BASE_URL + ENTRIES_OBJECT + URL_ENDING;
-    private static final String CREATE_URL = BASE_URL + ENTRIES_OBJECT + URL_ENDING;
-    private static final String SINGLE_ENTRY = BASE_URL + ENTRIES_OBJECT + "%s/" + URL_ENDING;
+    private static final String CREATE_URL   = BASE_URL + ENTRIES_OBJECT + URL_ENDING;
+    private static final String SINGLE_ENTRY = BASE_URL + ENTRIES_OBJECT + "/%s" + URL_ENDING;
 
     // TODO: CREATE
     public static void createEntry(final JournalEntry entry) {
@@ -48,6 +48,7 @@ public class JournalFirebaseDAO {
     // TODO: READ ALL
     // S03M03-7 write method to read all entries from database
     public static ArrayList<JournalEntry> readAllEntries() {
+        // TODO: Why isn't it grabbing all entries
         final ArrayList<JournalEntry> resultList = new ArrayList<>();
 
         final String result = NetworkAdapter.httpRequest(READ_ALL_URL);
@@ -55,21 +56,24 @@ public class JournalFirebaseDAO {
             JSONObject topJson = new JSONObject(result);
             for (Iterator<String> it = topJson.keys(); it.hasNext(); ) {
                 String key = it.next();
+                try {
+                    final JSONObject jsonEntry = topJson.getJSONObject(key);
+                    int              date      = jsonEntry.getInt("date");
+                    int              dayRating = jsonEntry.getInt("day_rating");
+                    String           entryText = jsonEntry.getString("entry_text");
+                    String           image     = jsonEntry.getString("image");
+                    String           id        = key;
 
-                final JSONObject jsonEntry = topJson.getJSONObject(key);
-                int              date      = jsonEntry.getInt("date");
-                int              dayRating = jsonEntry.getInt("day_rating");
-                String           entryText = jsonEntry.getString("entry_text");
-                String           image     = jsonEntry.getString("image");
-                String           id        = key;
-
-                resultList.add(
-                        new JournalEntry(
-                                Integer.toString(date),
-                                entryText,
-                                image,
-                                dayRating,
-                                id));
+                    resultList.add(
+                            new JournalEntry(
+                                    date,
+                                    entryText,
+                                    image,
+                                    dayRating,
+                                    id));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             Log.i(TAG, "Finished parsing all entries");
 
@@ -81,7 +85,7 @@ public class JournalFirebaseDAO {
     }
 
     // TODO: UPDATE
-    public void updateEntry(final JournalEntry entry) {
+    public static void updateEntry(final JournalEntry entry) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -93,14 +97,24 @@ public class JournalFirebaseDAO {
                         NetworkAdapter.PUT,
                         entry.toJsonObject(),
                         headerProps);
-                try {
-                    entry.setId(new JSONObject(result).getString("name"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
+                // could check result for successful update
             }
         }).start();
     }
 
     // TODO: DELETE
+    public static void deleteEntry(final JournalEntry entry) {
+        // TODO: Connect to delete button
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String result = NetworkAdapter.httpRequest(
+                        String.format(SINGLE_ENTRY, entry.getId()),
+                        NetworkAdapter.DELETE);
+
+                // could check result for successful update
+            }
+        }).start();
+    }
 }

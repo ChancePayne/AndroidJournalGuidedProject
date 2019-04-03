@@ -28,6 +28,10 @@ public class NetworkAdapter {
         return httpRequest(urlString, GET, null, null);
     }
 
+    static String httpRequest(String urlString, String requestMethod) {
+        return httpRequest(urlString, requestMethod, null, null);
+    }
+
     static String httpRequest(String urlString, String requestMethod, JSONObject requestBody, Map<String, String> headerProperties) {
         String             result      = "";
         InputStream        inputStream = null;
@@ -46,7 +50,7 @@ public class NetworkAdapter {
             }
 
             // S03M03-10 add support for different types of request
-            if(requestMethod.equals(POST) && requestBody != null) {
+            if((requestMethod.equals(POST) || requestMethod.equals(PUT)) && requestBody != null) {
                 // S03M03-11 write body of post request
                 connection.setDoInput(true);
                 final OutputStream outputStream = connection.getOutputStream();

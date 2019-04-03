@@ -36,7 +36,7 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
     public void onBindViewHolder(@NonNull JournalEntryViewHolder journalEntryViewHolder, int i) {
         final JournalEntry data = entryData.get(i);
 
-        journalEntryViewHolder.entryDateView.setText(data.getDate());
+        journalEntryViewHolder.entryDateView.setText(data.getStringDate());
 //        journalEntryViewHolder.entryRatingView.setText(Integer.toString(data.getDayRating()));
 
         // S02M02-12 Change background color based on the day's rating
