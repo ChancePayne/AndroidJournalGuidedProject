@@ -117,7 +117,7 @@ public class JournalListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
 //        addTestEntries();
-        new AddSampleDataAsync().execute(data);
+//        new AddSampleDataAsync().execute(data);
     }
 
     // S02M04-8 schedule a broadcast to display our notification periodically
@@ -279,25 +279,23 @@ public class JournalListActivity extends AppCompatActivity {
 
             String[]                entryStrings = strings[0].split("\n");
             ArrayList<JournalEntry> entries      = new ArrayList<>(entryStrings.length);
-            for(int n = 0; n < 100; ++n) {
-                for (int i = 0; i < entryStrings.length; ++i) {
-                    String[] values = entryStrings[i].split(",");
+            for (int i = 0; i < entryStrings.length; ++i) {
+                String[] values = entryStrings[i].split(",");
 //            String entryText, long epochTimeSeconds, int rating
-                    long epochTimeSeconds = 0;
-                    int  rating           = 0;
-                    try {
-                        epochTimeSeconds = Long.parseLong(values[1]);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        rating = Integer.parseInt(values[2]);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
-                    entries.add(new JournalEntry(values[0], epochTimeSeconds, rating));
-                    publishProgress(i * n, entryStrings.length * 100);
+                long epochTimeSeconds = 0;
+                int  rating           = 0;
+                try {
+                    epochTimeSeconds = Long.parseLong(values[1]);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
                 }
+                try {
+                    rating = Integer.parseInt(values[2]);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                entries.add(new JournalEntry(values[0], epochTimeSeconds, rating));
+                publishProgress(i, entryStrings.length * 100);
             }
             Log.i("StopwatchSampleData", String.valueOf((System.nanoTime() - start)));
             return entries;
