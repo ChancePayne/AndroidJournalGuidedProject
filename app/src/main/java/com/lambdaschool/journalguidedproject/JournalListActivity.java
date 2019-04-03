@@ -41,11 +41,12 @@ public class JournalListActivity extends AppCompatActivity {
     public static final int    LIST_INTENT_RESPONSE_REQUEST_CODE  = 6542;
     public static final String TAG                                = "JournalListActivity";
     public static final int    NOTIFICATION_SCHEDULE_REQUEST_CODE = 54;
+    public static final int    INVALID_INDEX                      = -1;
 
     Context context;
 
-    ArrayList<JournalEntry>      entryList;
-    JournalSharedPrefsRepository repo;
+    ArrayList<JournalEntry> entryList;
+    JournalStorageManager   repo;
 
     JournalListAdapter listAdapter;
 
@@ -57,7 +58,7 @@ public class JournalListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         context = this;
-        repo = new JournalSharedPrefsRepository(context);
+        repo = new JournalStorageManager(context);
         channelId = getPackageName() + ".reminder";
 
         setReminder();
@@ -99,22 +100,34 @@ public class JournalListActivity extends AppCompatActivity {
             }
         });
 
-        entryList = repo.readAllEntries();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                entryList = repo.readAllEntries();
 
-        // S02M02-9 bind adapter to view (UI)
-        // constructing a new list adapter with our initial data set
-        listAdapter = new JournalListAdapter(entryList);
 
-        // bind a new handle to our recycler view
-        RecyclerView recyclerView = findViewById(R.id.journal_recycler_view);
+                // S02M02-9 bind adapter to view (UI)
+                // constructing a new list adapter with our initial data set
+                listAdapter = new JournalListAdapter(entryList);
 
-        // binding our list adapter to our recycler view
-        recyclerView.setAdapter(listAdapter);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // bind a new handle to our recycler view
+                        RecyclerView recyclerView = findViewById(R.id.journal_recycler_view);
 
-        // creating and binding a layout manager to our recycler view
-        // this will manage how the items in the view are laid out
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+                        // binding our list adapter to our recycler view
+                        recyclerView.setAdapter(listAdapter);
+
+                        // creating and binding a layout manager to our recycler view
+                        // this will manage how the items in the view are laid out
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+                        recyclerView.setLayoutManager(layoutManager);
+                    }
+                });
+            }
+        }).start();
+
 
 //        addTestEntries();
 //        new AddSampleDataAsync().execute(data);
@@ -243,14 +256,21 @@ public class JournalListActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            final JournalEntry entry = (JournalEntry) data.getSerializableExtra(JournalEntry.TAG);
-                            entryList.set(entry.getId(), entry);
-                            repo.updateEntry(entry);
+                            final JournalEntry entry      = (JournalEntry) data.getSerializableExtra(JournalEntry.TAG);
+                            final int          entryIndex = getEntryIndex(entry);
+                            if (entryIndex == INVALID_INDEX) {
+                                entryList.add(entry);
+                                repo.createEntry(entry);
+                            } else {
+                                entryList.set(entryIndex, entry);
+                                repo.updateEntry(entry);
+                            }
                             Log.i("StopwatchEditEntryCom", Long.toString(System.nanoTime() - start));
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    listAdapter.notifyItemChanged(entry.getId());
+                                    listAdapter.notifyItemChanged(
+                                            entryIndex == INVALID_INDEX ? entryList.size() - 1 : entryIndex);
                                 }
                             });
                         }
@@ -260,6 +280,15 @@ public class JournalListActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    int getEntryIndex(JournalEntry entry) {
+        for (int i = 0; i < entryList.size(); ++i) {
+            if (entry.getId().equals(entryList.get(i).getId())) {
+                return i;
+            }
+        }
+        return INVALID_INDEX;
     }
 
     class AddSampleDataAsync extends AsyncTask<String, Integer, ArrayList<JournalEntry>> {

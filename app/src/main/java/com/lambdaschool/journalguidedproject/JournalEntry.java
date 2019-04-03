@@ -9,12 +9,13 @@ import java.util.Date;
 
 public class JournalEntry implements Serializable {
     public static final String TAG        = "JournalEntry";
-    public static final int    INVALID_ID = -1;
+    public static final String INVALID_ID = "";
 
-    private String date, entryText, image;
-    private int dayRating, id;
+    // S03M03-8 Change ID to a string
+    private String date, entryText, image, id;
+    private int dayRating;
 
-    public JournalEntry(String date, String entryText, String image, int dayRating, int id) {
+    public JournalEntry(String date, String entryText, String image, int dayRating, String id) {
         this.date = date;
         this.entryText = entryText;
         this.image = image;
@@ -22,15 +23,15 @@ public class JournalEntry implements Serializable {
         this.id = id;
     }
 
-    public JournalEntry(int id) {
-        this.id = id;
+    public JournalEntry() {
+        this.id = INVALID_ID;
         this.entryText = "";
         this.image = "";
 
         initializeDate();
     }
 
-    public JournalEntry(int id, String entryText) {
+    public JournalEntry(String id, String entryText) {
         this.id = id;
         this.entryText = entryText;
         this.dayRating = 3;
@@ -57,7 +58,7 @@ public class JournalEntry implements Serializable {
         if (values.length == 5) {
             // handle missing numbers or strings in the number position
             try {
-                this.id = Integer.parseInt(values[0]);
+                this.id = values[0];
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -132,11 +133,11 @@ public class JournalEntry implements Serializable {
         this.dayRating = dayRating;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

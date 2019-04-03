@@ -21,7 +21,7 @@ public class JournalSharedPrefsRepository {
     }
 
     // create a new entry
-    public void createEntry(JournalEntry entry) {
+    /*public void createEntry(JournalEntry entry) {
         // read list of entry ids
         ArrayList<String> ids = getListOfIds();
 
@@ -53,7 +53,7 @@ public class JournalSharedPrefsRepository {
         }
 
         // save entry
-    }
+    }*/
 
     private ArrayList<String> getListOfIds() {
         String            idList  = prefs.getString(ID_LIST_KEY, "");

@@ -20,7 +20,7 @@ public class NotificationResponseReceiver extends BroadcastReceiver {
 
         // S02M04-11 create journal entry using remote input
         if(entryText != null) {
-            JournalSharedPrefsRepository repo  = new JournalSharedPrefsRepository(context);
+            JournalStorageManager repo  = new JournalStorageManager(context);
             JournalEntry                 entry = new JournalEntry(JournalEntry.INVALID_ID, entryText);
             repo.createEntry(entry);
         }

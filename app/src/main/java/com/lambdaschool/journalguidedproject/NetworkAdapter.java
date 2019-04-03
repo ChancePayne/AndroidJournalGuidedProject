@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+// S03M03-1 build and test firebase database
+// S03M03-2 Add basic network adapter
 public class NetworkAdapter {
     static String httpRequest(String urlString, Map<String, String> headerProperties) {
         String             result      = "";
