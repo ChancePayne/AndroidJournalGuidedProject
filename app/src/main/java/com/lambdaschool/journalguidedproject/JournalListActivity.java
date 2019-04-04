@@ -1,35 +1,23 @@
 package com.lambdaschool.journalguidedproject;
 
-import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class JournalListActivity extends AppCompatActivity {
 
@@ -294,7 +282,7 @@ public class JournalListActivity extends AppCompatActivity {
 
     int getEntryIndex(JournalEntry entry) {
         for (int i = 0; i < entryList.size(); ++i) {
-            if (entry.getId().equals(entryList.get(i).getId())) {
+            if (entry.getFbId().equals(entryList.get(i).getFbId())) {
                 return i;
             }
         }

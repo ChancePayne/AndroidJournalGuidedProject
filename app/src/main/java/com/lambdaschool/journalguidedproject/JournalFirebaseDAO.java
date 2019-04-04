@@ -2,7 +2,6 @@ package com.lambdaschool.journalguidedproject;
 
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,12 +31,12 @@ public class JournalFirebaseDAO {
                 headerProps.put("Content-Type", "application/json");
 
                 String result = NetworkAdapter.httpRequest(
-                        String.format(CREATE_URL, entry.getId()),
+                        String.format(CREATE_URL, entry.getFbId()),
                         NetworkAdapter.POST,
                         entry.toJsonObject(),
                         headerProps);
                 try {
-                    entry.setId(new JSONObject(result).getString("name"));
+                    entry.setFbId(new JSONObject(result).getString("name"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -63,15 +62,23 @@ public class JournalFirebaseDAO {
                     int              dayRating = jsonEntry.getInt("day_rating");
                     String           entryText = jsonEntry.getString("entry_text");
                     String           image     = jsonEntry.getString("image");
+                    String cacheId = null;
+                    try {
+                        cacheId = jsonEntry.getString("cache_id");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     String           id        = key;
 
+                    final JournalEntry entry = new JournalEntry(
+                            date,
+                            entryText,
+                            image,
+                            dayRating,
+                            id);
+                    entry.setCacheId(cacheId);
                     resultList.add(
-                            new JournalEntry(
-                                    date,
-                                    entryText,
-                                    image,
-                                    dayRating,
-                                    id));
+                            entry);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -94,7 +101,7 @@ public class JournalFirebaseDAO {
                 headerProps.put("Content-Type", "application/json");
 
                 String result = NetworkAdapter.httpRequest(
-                        String.format(SINGLE_ENTRY, entry.getId()),
+                        String.format(SINGLE_ENTRY, entry.getFbId()),
                         NetworkAdapter.PUT,
                         entry.toJsonObject(),
                         headerProps);
@@ -111,7 +118,7 @@ public class JournalFirebaseDAO {
             @Override
             public void run() {
                 String result = NetworkAdapter.httpRequest(
-                        String.format(SINGLE_ENTRY, entry.getId()),
+                        String.format(SINGLE_ENTRY, entry.getFbId()),
                         NetworkAdapter.DELETE);
 
                 // could check result for successful update

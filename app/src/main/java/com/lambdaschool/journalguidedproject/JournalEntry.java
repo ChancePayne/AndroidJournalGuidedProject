@@ -15,27 +15,27 @@ public class JournalEntry implements Serializable {
     public static final String INVALID_ID = "";
 
     // S03M03-8 Change ID to a string
-    private String entryText, image, id;
+    private String entryText, image, fbId, cacheId;
     private int dayRating, date;
 
-    public JournalEntry(int date, String entryText, String image, int dayRating, String id) {
+    public JournalEntry(int date, String entryText, String image, int dayRating, String fbId) {
         this.date = date;
         this.entryText = entryText;
         this.image = image;
         this.dayRating = dayRating;
-        this.id = id;
+        this.fbId = fbId;
     }
 
     public JournalEntry() {
-        this.id = INVALID_ID;
+        this.fbId = INVALID_ID;
         this.entryText = "";
         this.image = "";
 
         initializeDate();
     }
 
-    public JournalEntry(String id, String entryText) {
-        this.id = id;
+    public JournalEntry(String fbId, String entryText) {
+        this.fbId = fbId;
         this.entryText = entryText;
         this.dayRating = 3;
         this.image = "";
@@ -49,7 +49,7 @@ public class JournalEntry implements Serializable {
 
         this.setDate((int) epochTimeSeconds);
 
-        this.id = INVALID_ID;
+        this.fbId = INVALID_ID;
         this.image = "";
     }
 
@@ -59,7 +59,7 @@ public class JournalEntry implements Serializable {
         if (values.length == 5) {
             // handle missing numbers or strings in the number position
             try {
-                this.id = values[0];
+                this.fbId = values[0];
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -78,13 +78,13 @@ public class JournalEntry implements Serializable {
     }
 
     boolean areEqual(JournalEntry a) {
-        return this.id == a.id && this.getDayRating() == a.getDayRating();
+        return this.fbId == a.fbId && this.getDayRating() == a.getDayRating();
     }
 
     // converting our object into a csv string that we can handle in a constructor
     String toCsvString() {
-        return String.format("%d,%s,%d,%s,%s",
-                             id,
+        return String.format("%s,%d,%d,%s,%s",
+                             fbId,
                              date,
                              dayRating,
                              entryText.replace(",", "~@"),
@@ -138,12 +138,12 @@ public class JournalEntry implements Serializable {
         this.dayRating = dayRating;
     }
 
-    public String getId() {
-        return id;
+    public String getFbId() {
+        return fbId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setFbId(String fbId) {
+        this.fbId = fbId;
     }
 
     // S03M03-12 write method to convert entry into jsonObject
@@ -154,6 +154,7 @@ public class JournalEntry implements Serializable {
             jsonObject.put("entry_text", entryText);
             jsonObject.put("image", image);
             jsonObject.put("day_rating", dayRating);
+            jsonObject.put("cache_id", cacheId);
             return jsonObject;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -164,5 +165,13 @@ public class JournalEntry implements Serializable {
                 return null;
             }
         }
+    }
+
+    public String getCacheId() {
+        return cacheId;
+    }
+
+    public void setCacheId(String cacheId) {
+        this.cacheId = cacheId;
     }
 }

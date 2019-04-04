@@ -12,7 +12,7 @@ public class JournalSharedPrefsRepository {
 
     private static final String ID_LIST_KEY           = "id_list";
     private static final String ENTRY_ITEM_KEY_PREFIX = "entry_";
-//    private static final String NEXT_ID_KEY           = "next_id";
+    private static final String NEXT_ID_KEY           = "next_id";
 
     private SharedPreferences prefs;
 
@@ -25,18 +25,18 @@ public class JournalSharedPrefsRepository {
         // read list of entry ids
         ArrayList<String> ids = getListOfIds();
 
-        if (entry.getId().equals(JournalEntry.INVALID_ID) && !ids.contains(entry.getId())) {
+        if (entry.getCacheId() == null && !ids.contains(entry.getCacheId())) {
             // new entry
             SharedPreferences.Editor editor = prefs.edit();
 
-            /*int nextId = prefs.getInt(NEXT_ID_KEY, 0);
-            entry.setId(nextId);
+            int nextId = prefs.getInt(NEXT_ID_KEY, 0);
+            entry.setCacheId(Integer.toString(nextId));
             // store updated next id
-            editor.putInt(NEXT_ID_KEY, ++nextId);*/
+            editor.putInt(NEXT_ID_KEY, ++nextId);
 
             // add id to list of ids
 
-            ids.add(entry.getId());
+            ids.add(entry.getCacheId());
             // store updated id list
             StringBuilder newIdList = new StringBuilder();
             for (String id : ids) {
@@ -46,7 +46,7 @@ public class JournalSharedPrefsRepository {
             editor.putString(ID_LIST_KEY, newIdList.toString());
 
             // store new entry
-            editor.putString(ENTRY_ITEM_KEY_PREFIX + entry.getId(), entry.toCsvString());
+            editor.putString(ENTRY_ITEM_KEY_PREFIX + entry.getCacheId(), entry.toCsvString());
             editor.apply();
         } else {
             updateEntry(entry);
@@ -92,7 +92,7 @@ public class JournalSharedPrefsRepository {
     // edit an existing entry
     public void updateEntry(JournalEntry entry) {
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(ENTRY_ITEM_KEY_PREFIX + entry.getId(), entry.toCsvString());
+        editor.putString(ENTRY_ITEM_KEY_PREFIX + entry.getCacheId(), entry.toCsvString());
         editor.apply();
     }
 
