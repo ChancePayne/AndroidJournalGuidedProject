@@ -53,7 +53,7 @@ public class JournalEntry implements Serializable {
         this.image = "";
     }
 
-    /*public JournalEntry(String csvString) {
+    public JournalEntry(String csvString) {
         String[] values = csvString.split(",");
         // check to see if we have the right string
         if (values.length == 5) {
@@ -63,7 +63,7 @@ public class JournalEntry implements Serializable {
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
-            this.date = values[1];
+            this.date = Integer.parseInt(values[1]);
             try {
                 this.dayRating = Integer.parseInt(values[2]);
             } catch (NumberFormatException e) {
@@ -75,7 +75,7 @@ public class JournalEntry implements Serializable {
             // placeholder for image will maintain csv's structure even with no provided image
             this.image = values[4].equals("unused") ? "" : values[4];
         }
-    }*/
+    }
 
     boolean areEqual(JournalEntry a) {
         return this.id == a.id && this.getDayRating() == a.getDayRating();

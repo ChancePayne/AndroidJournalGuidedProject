@@ -7,9 +7,11 @@ import java.util.ArrayList;
 // S03M03-3 Create Manager class and replace all references to repository with this class
 public class JournalStorageManager {
 
+    JournalSharedPrefsRepository repo;
+
     // S03M03-4 Add method implementations to fix error messages
     public JournalStorageManager(Context context) {
-
+        repo = new JournalSharedPrefsRepository(context);
     }
 
     public ArrayList<JournalEntry> readAllEntries() {

@@ -103,7 +103,9 @@ public class JournalListActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                long start = System.nanoTime();
                 entryList = repo.readAllEntries();
+                Log.i("StopwatchLoadAllEntries", Long.toString(System.nanoTime() - start));
 
 
                 // S02M02-9 bind adapter to view (UI)
@@ -274,10 +276,18 @@ public class JournalListActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    });
+                    }).start();
                     Log.i("StopwatchEditEntry", Long.toString(System.nanoTime() - start));
                     // S02M02-10
                 }
+            }
+        } else if (resultCode == RESULT_CANCELED) {
+            if(data != null) {
+                final JournalEntry entry      = (JournalEntry) data.getSerializableExtra(JournalEntry.TAG);
+                final int          entryIndex = getEntryIndex(entry);
+                entryList.remove(entryIndex);
+                listAdapter.notifyItemChanged(entryIndex);
+                repo.deleteEntry(entry);
             }
         }
     }

@@ -105,18 +105,15 @@ public class DetailsActivity extends AppCompatActivity {
         findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final JournalStorageManager journalStorageManager = new JournalStorageManager(v.getContext());
-                journalStorageManager.deleteEntry(entry);
-
                 Intent resultIntent = new Intent();
+                resultIntent.putExtra(JournalEntry.TAG, entry);
+
                 setResult(Activity.RESULT_CANCELED, resultIntent);
 
                 finish();
             }
         });
     }
-
-
 
 
     @Override
