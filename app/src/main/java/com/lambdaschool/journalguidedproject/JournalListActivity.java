@@ -1,5 +1,6 @@
 package com.lambdaschool.journalguidedproject;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +33,7 @@ public class JournalListActivity extends AppCompatActivity {
     public static final int    NOTIFICATION_SCHEDULE_REQUEST_CODE = 54;
     public static final int    INVALID_INDEX                      = -1;
 
-    Context context;
+    public static Context context;
 
     ArrayList<JournalEntry> entryList;
     JournalStorageManager   repo;
@@ -44,6 +46,7 @@ public class JournalListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         context = this;
         repo = new JournalStorageManager(context);

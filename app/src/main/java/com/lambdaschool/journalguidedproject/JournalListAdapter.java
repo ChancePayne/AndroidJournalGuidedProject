@@ -1,6 +1,7 @@
 package com.lambdaschool.journalguidedproject;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;

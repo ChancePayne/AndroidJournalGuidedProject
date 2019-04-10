@@ -2,6 +2,7 @@ package com.lambdaschool.journalguidedproject;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,13 +63,13 @@ public class JournalFirebaseDAO {
                     int              dayRating = jsonEntry.getInt("day_rating");
                     String           entryText = jsonEntry.getString("entry_text");
                     String           image     = jsonEntry.getString("image");
-                    String cacheId = null;
+                    String           cacheId   = null;
                     try {
                         cacheId = jsonEntry.getString("cache_id");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    String           id        = key;
+                    String id = key;
 
                     final JournalEntry entry = new JournalEntry(
                             date,
