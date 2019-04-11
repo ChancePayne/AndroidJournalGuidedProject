@@ -39,7 +39,10 @@
             app:layout_constraintBottom_toTopOf="@id/journal_entry_text"
             app:layout_constraintTop_toBottomOf="@id/journal_entry_date" />
 
-        <EditText
+        <com.lambdaschool.journalguidedproject.views.LinedEditText
+            app:line_color="@color/colorAccent"
+            app:line_thickness="5"
+
             android:id="@+id/journal_entry_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
