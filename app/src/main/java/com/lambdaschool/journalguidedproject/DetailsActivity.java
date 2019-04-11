@@ -10,7 +10,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -46,6 +48,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         entryTextView = findViewById(R.id.journal_entry_text);
         entryTextView.setText(entry.getEntryText());
+        entryTextView.setImeActionLabel("SAVE", KeyEvent.KEYCODE_ENTER);
         entryTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -61,6 +64,16 @@ public class DetailsActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String entryString = s.toString();
                 entry.setEntryText(entryString);
+            }
+        });
+        entryTextView.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE) {
+                    onBackPressed();
+                    return true;
+                }
+                return false;
             }
         });
 

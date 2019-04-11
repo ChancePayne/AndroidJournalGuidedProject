@@ -93,11 +93,12 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
                 break;
         }
 
-
-        final String substring = data.getEntryText().substring(
-                0,
-                data.getEntryText().length() > 30 ? 30 : data.getEntryText().length() - 1);
-        journalEntryViewHolder.entryTextView.setText(substring + "...");
+        if(data.getEntryText() != null) {
+            final String substring = data.getEntryText().substring(
+                    0,
+                    data.getEntryText().length() > 30 ? 30 : data.getEntryText().length() - 1);
+            journalEntryViewHolder.entryTextView.setText(substring + "...");
+        }
 
         journalEntryViewHolder.parentView.setOnClickListener(new View.OnClickListener() {
             @Override
