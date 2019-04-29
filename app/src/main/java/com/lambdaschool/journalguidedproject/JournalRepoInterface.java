@@ -1,5 +1,7 @@
 package com.lambdaschool.journalguidedproject;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 public interface JournalRepoInterface {

@@ -59,7 +59,7 @@ public class JournalFirebaseDAO {
                 String key = it.next();
                 try {
                     final JSONObject jsonEntry = topJson.getJSONObject(key);
-                    int              date      = jsonEntry.getInt("date");
+                    /*int              date      = jsonEntry.getInt("date");
                     int              dayRating = jsonEntry.getInt("day_rating");
                     String           entryText = jsonEntry.getString("entry_text");
                     String           image     = jsonEntry.getString("image");
@@ -77,9 +77,13 @@ public class JournalFirebaseDAO {
                             image,
                             dayRating,
                             id);
-                    entry.setCacheId(cacheId);
-                    resultList.add(
-                            entry);
+                    entry.setCacheId(cacheId);*/
+                    final JournalEntry entry = new JournalEntry(jsonEntry);
+                    entry.setFbId(key);
+                    if(entry.getEntryText() != null) {
+                        resultList.add(
+                                entry);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

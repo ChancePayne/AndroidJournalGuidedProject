@@ -11,7 +11,8 @@ public class JournalStorageManager {
 
     // S03M03-4 Add method implementations to fix error messages
     public JournalStorageManager(Context context) {
-        repo = new JournalSharedPrefsRepository(context);
+//        repo = new JournalSharedPrefsRepository(context);
+        repo = new JournalFilesRepo(context);
     }
 
     public ArrayList<JournalEntry> readAllEntries() {

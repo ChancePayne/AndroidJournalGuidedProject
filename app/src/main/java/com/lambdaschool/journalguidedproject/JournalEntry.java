@@ -18,6 +18,34 @@ public class JournalEntry implements Serializable {
     private String entryText, image, fbId, cacheId;
     private int dayRating, date;
 
+    public JournalEntry(JSONObject jsonEntry) {
+        try {
+            this.date      = jsonEntry.getInt("date");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.dayRating = jsonEntry.getInt("day_rating");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.entryText = jsonEntry.getString("entry_text");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.image     = jsonEntry.getString("image");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.cacheId = jsonEntry.getString("cache_id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public JournalEntry(int date, String entryText, String image, int dayRating, String fbId) {
         this.date = date;
         this.entryText = entryText;
