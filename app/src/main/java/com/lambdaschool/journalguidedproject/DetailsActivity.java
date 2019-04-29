@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends BaseActivity {
 
     private static final int IMAGE_REQUEST_CODE = 50;
 
@@ -30,7 +30,6 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onCreate");
 
         setContentView(R.layout.activity_detail);
 
@@ -135,38 +134,4 @@ public class DetailsActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onResume");
-    }
-
-    // user interacting with app
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onDestroy");
-    }
-
-
 }

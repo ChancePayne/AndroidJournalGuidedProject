@@ -21,7 +21,7 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class JournalListActivity extends AppCompatActivity {
+public class JournalListActivity extends BaseActivity {
 
     public static final int    NEW_ENTRY_REQUEST                  = 2;
     public static final int    EDIT_ENTRY_REQUEST                 = 1;
@@ -55,8 +55,6 @@ public class JournalListActivity extends AppCompatActivity {
         setReminder();
 
 //        processNotificationResponse(getIntent());
-
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onCreate");
 
         setContentView(R.layout.activity_journal_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -152,41 +150,6 @@ public class JournalListActivity extends AppCompatActivity {
                 calendar.getTimeInMillis(), // first time to trigger (set this to System.currentTimeMillis() + millis to test sooner)
                 AlarmManager.INTERVAL_DAY, // interval between each trigger, set this to a low number os seconds during testing.
                 notificationScheduleIntent); // pending intent to use during the trigger
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onResume");
-
-//        listAdapter.notifyDataSetChanged();
-    }
-
-    // user interacting with app
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("ActivityLifecycle", getLocalClassName() + " - onDestroy");
     }
 
     private JournalEntry createJournalEntry() {
