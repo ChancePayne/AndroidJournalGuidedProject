@@ -1,8 +1,13 @@
 package com.lambdaschool.journalguidedproject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +20,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 public class DetailsActivity extends BaseActivity {
 
@@ -120,9 +134,84 @@ public class DetailsActivity extends BaseActivity {
         if(resultCode == RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
             if (data != null) {
                 Uri dataUri = data.getData();
+                Bitmap bitmap;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),dataUri);
+
+                    // write to file
+                    File bitmapWriteFile = new File(this.getFilesDir(), entry.getFbId());
+
+                    // get bitmap bytes
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+                    final byte[] bytes = stream.toByteArray();
+                    bitmap.recycle();
+
+                    final String     path             = bitmapWriteFile.getPath();
+                    FileOutputStream fileOutputStream = new FileOutputStream(path);
+
+                    fileOutputStream.write(bytes);
+                    fileOutputStream.close();
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 entry.setImage(dataUri);
 
+
+                // read from file
+                File file = new File(this.getFilesDir(), entry.getFbId());
+
+                FileInputStream fileInputStream = null;
+                ArrayList<Byte> readData = new ArrayList<>();
+                try {
+                    fileInputStream = new FileInputStream(file.getPath());
+//                    final InputStream inputStream = getContentResolver().openInputStream(dataUri);
+                    byte read;
+                    do {
+                        read = (byte) fileInputStream.read();
+                        readData.add(read);
+                    } while(read != -1);
+
+                    final Object[] objects = readData.toArray();
+                    final Object[] objects2 = readData.toArray(new Byte[]{});
+                    final Byte[] objects3 = new Byte[readData.size()];
+                    readData.toArray(objects3);
+
+//                    Bitmap         image   = BitmapFactory.decodeByteArray(objects)
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if(fileInputStream != null) {
+                        try {
+                            fileInputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
                 dayImageView.setImageURI(dataUri);
+            }
+        }
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
         }
     }

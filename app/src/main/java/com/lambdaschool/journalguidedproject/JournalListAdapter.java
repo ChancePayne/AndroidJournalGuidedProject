@@ -93,7 +93,7 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
                 break;
         }
 
-        if (data.getEntryText() != null) {
+        if (data.getEntryText() != null && data.getEntryText().length() > 0) {
             final String substring = data.getEntryText().substring(
                     0,
                     data.getEntryText().length() > 30 ? 30 : data.getEntryText().length() - 1);

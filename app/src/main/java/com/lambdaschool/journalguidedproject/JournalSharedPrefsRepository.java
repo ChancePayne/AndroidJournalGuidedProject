@@ -84,7 +84,10 @@ public class JournalSharedPrefsRepository {
         // step through that list and read each entry
         ArrayList<JournalEntry> entryList = new ArrayList<>();
         for (String id : listOfIds) {
-            entryList.add(readEntry(Integer.parseInt(id)));
+            final JournalEntry entry = readEntry(Integer.parseInt(id));
+            if(entry != null) {
+                entryList.add(entry);
+            }
         }
         return entryList;
     }
