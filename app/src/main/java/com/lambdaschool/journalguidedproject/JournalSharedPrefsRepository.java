@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 // responsible for managing journal long term storage
-public class JournalSharedPrefsRepository {
+public class JournalSharedPrefsRepository implements JournalRepoInterface{
     private static final String JOURNAL_PREFERENCES = "JournalPreferences";
 
     private static final String ID_LIST_KEY           = "id_list";
@@ -97,6 +97,11 @@ public class JournalSharedPrefsRepository {
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putString(ENTRY_ITEM_KEY_PREFIX + entry.getCacheId(), entry.toCsvString());
         editor.apply();
+    }
+
+    @Override
+    public void deleteEntry(JournalEntry entry) {
+        // TODO: Add delete
     }
 
 
