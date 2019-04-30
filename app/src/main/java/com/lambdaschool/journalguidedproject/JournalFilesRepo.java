@@ -78,11 +78,14 @@ public class JournalFilesRepo implements JournalRepoInterface{
 
         // get External Directory
         if(isExternalStorageWriteable()) {
-            File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Journals");
-            if(!directory.mkdirs()) {
+//            File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Journals");
+            File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            if(!directory.exists() && !directory.mkdirs()) {
                 // didn't create
+                return context.getCacheDir();
+            } else {
+                return directory;
             }
-            return directory;
         } else {
             return context.getCacheDir();
         }
@@ -192,18 +195,20 @@ public class JournalFilesRepo implements JournalRepoInterface{
         }
     }
 
-    private ArrayList<String> getFileList() {
-        ArrayList<String> fileNames = new ArrayList<>();
+private ArrayList<String> getFileList() {
+    ArrayList<String> fileNames = new ArrayList<>();
 
-        final File filesDir = getStorageDirectory();
+    final File filesDir = getStorageDirectory();
 
-        final String[] list = filesDir.list();
-        for(String name: list) {
-            if(name.contains(".json")) {
+    final String[] list = filesDir.list();
+    if(list != null) {
+        for (String name : list) {
+            if (name.contains(".json")) {
                 fileNames.add(name);
             }
         }
-
-        return fileNames;
     }
+
+    return fileNames;
+}
 }
