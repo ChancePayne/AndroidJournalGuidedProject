@@ -68,13 +68,16 @@ public class JournalStorageManager {
 
     public void storeImage(Bitmap bitmap, JournalEntry entry) {
         // get bitmap bytes
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        /*ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
-        final byte[] bytes = stream.toByteArray();
+        final byte[] bytes = stream.toByteArray();*/
 
-        repo.createImage(bytes, getImageName(entry));
+        repo.createImage(bitmap, getImageName(entry));
 
-        bitmap.recycle();
+//        bitmap.recycle();
+
+
+
     }
 
     private String getImageName(JournalEntry entry) {

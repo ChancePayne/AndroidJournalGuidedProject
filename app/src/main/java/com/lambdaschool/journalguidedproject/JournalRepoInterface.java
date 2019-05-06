@@ -11,6 +11,6 @@ public interface JournalRepoInterface {
     ArrayList<JournalEntry> readAllEntries();
     void updateEntry(JournalEntry entry);
     void deleteEntry(JournalEntry entry);
-    void createImage(byte[] bytes, String name);
+    void createImage(Bitmap bitmap, String name);
     Bitmap readImage(String name);
 }

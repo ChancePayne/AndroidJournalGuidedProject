@@ -106,7 +106,7 @@ public class JournalSharedPrefsRepository implements JournalRepoInterface{
     }
 
     @Override
-    public void createImage(byte[] bytes, String name) {
+    public void createImage(Bitmap bitmap, String name) {
 
     }
 

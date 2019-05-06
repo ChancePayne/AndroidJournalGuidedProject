@@ -17,7 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class JournalFilesRepo implements JournalRepoInterface{
+public class JournalFilesRepo implements JournalRepoInterface {
     Context context;
 
     public JournalFilesRepo(Context context) {
@@ -38,9 +38,9 @@ public class JournalFilesRepo implements JournalRepoInterface{
 
     @Override
     public ArrayList<JournalEntry> readAllEntries() {
-        final ArrayList<String> fileList = getFileList();
-        final ArrayList<JournalEntry> entries = new ArrayList<>(fileList.size());
-        for(String fileName: fileList) {
+        final ArrayList<String>       fileList = getFileList();
+        final ArrayList<JournalEntry> entries  = new ArrayList<>(fileList.size());
+        for (String fileName : fileList) {
             String jsonContent = readFromFile(fileName);
             try {
                 entries.add(new JournalEntry(new JSONObject(jsonContent)));
@@ -64,20 +64,60 @@ public class JournalFilesRepo implements JournalRepoInterface{
 
     public boolean isExternalStorageWriteable() {
         String state = Environment.getExternalStorageState();
-        if(Environment.MEDIA_MOUNTED.equals(state)) {
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
         } else {
             return false;
         }
     }
 
-    public void createImage(byte[] bytes, String name) {
-        writeToFile(name, bytes);
+    public void createImage(Bitmap bitmap, String name) {
+//        writeToFile(name, bytes);
+
+        File             outputFile = new File(getStorageDirectory(), name);
+        FileOutputStream output     = null;
+        try {
+            output = new FileOutputStream(outputFile);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (output != null) {
+                    output.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public Bitmap readImage(String name) {
 //        return readFromFileBytes(name);
-        return BitmapFactory.decodeFile(name);
+//        return BitmapFactory.decodeFile(name);
+
+        Bitmap          bitmap      = null;
+        FileInputStream inputStream = null;
+        try {
+            File input = new File(getStorageDirectory(), name);
+            inputStream = new FileInputStream(input);
+            bitmap = BitmapFactory.decodeStream(inputStream);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return bitmap;
+
     }
 
     private File getStorageDirectory() {
@@ -104,14 +144,14 @@ public class JournalFilesRepo implements JournalRepoInterface{
     }
 
     private String readFromFile(String fileName) {
-        File inputFile = new File(getStorageDirectory(), fileName);
-        StringBuilder readData = new StringBuilder();
-        FileReader reader = null;
+        File          inputFile = new File(getStorageDirectory(), fileName);
+        StringBuilder readData  = new StringBuilder();
+        FileReader    reader    = null;
         try {
             reader = new FileReader(inputFile);
             int next = reader.read();
-            while(next != -1) {
-                readData.append((char)next);
+            while (next != -1) {
+                readData.append((char) next);
                 next = reader.read();
             }
 
@@ -142,14 +182,14 @@ public class JournalFilesRepo implements JournalRepoInterface{
             do {
                 read = (byte) fileInputStream.read();
                 readData.add(read);
-            } while(read != -1);
+            } while (read != -1);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(fileInputStream != null) {
+            if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
@@ -163,7 +203,7 @@ public class JournalFilesRepo implements JournalRepoInterface{
     }
 
     private void writeToFile(String fileName, String text) {
-        File directory = getStorageDirectory();
+        File directory  = getStorageDirectory();
         File outputFile = new File(directory, fileName);
 
         FileWriter writer = null;
@@ -206,20 +246,20 @@ public class JournalFilesRepo implements JournalRepoInterface{
         }
     }
 
-private ArrayList<String> getFileList() {
-    ArrayList<String> fileNames = new ArrayList<>();
+    private ArrayList<String> getFileList() {
+        ArrayList<String> fileNames = new ArrayList<>();
 
-    final File filesDir = getStorageDirectory();
+        final File filesDir = getStorageDirectory();
 
-    final String[] list = filesDir.list();
-    if(list != null) {
-        for (String name : list) {
-            if (name.contains(".json")) {
-                fileNames.add(name);
+        final String[] list = filesDir.list();
+        if (list != null) {
+            for (String name : list) {
+                if (name.contains(".json")) {
+                    fileNames.add(name);
+                }
             }
         }
-    }
 
-    return fileNames;
-}
+        return fileNames;
+    }
 }
