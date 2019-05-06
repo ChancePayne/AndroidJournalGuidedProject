@@ -20,7 +20,7 @@ public class JournalEntry implements Serializable {
 
     public JournalEntry(JSONObject jsonEntry) {
         try {
-            this.date      = jsonEntry.getInt("date");
+            this.date = jsonEntry.getInt("date");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -35,7 +35,7 @@ public class JournalEntry implements Serializable {
             e.printStackTrace();
         }
         try {
-            this.image     = jsonEntry.getString("image");
+            this.image = jsonEntry.getString("image");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -75,7 +75,8 @@ public class JournalEntry implements Serializable {
         this.entryText = entryText;
         this.dayRating = rating;
 
-        this.setDate((int) epochTimeSeconds);
+//        this.setDate((int) epochTimeSeconds);
+        this.date = (int) epochTimeSeconds;
 
         this.fbId = INVALID_ID;
         this.image = "";
@@ -125,9 +126,9 @@ public class JournalEntry implements Serializable {
 
     public String getStringDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date       date       = new Date();
+        Date       dateObject = new Date(this.date * 1000L);
 
-        return dateFormat.format(date);
+        return dateFormat.format(dateObject);
     }
 
     public int getDate() {

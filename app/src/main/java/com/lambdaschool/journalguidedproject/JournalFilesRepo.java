@@ -74,10 +74,10 @@ public class JournalFilesRepo implements JournalRepoInterface{
 //        return context.getCacheDir();
 
         // get Internal directory
-//        return context.getFilesDir();
+        return context.getFilesDir();
 
         // get External Directory
-        if(isExternalStorageWriteable()) {
+        /*if(isExternalStorageWriteable()) {
 //            File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Journals");
             File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             if(!directory.exists() && !directory.mkdirs()) {
@@ -88,7 +88,7 @@ public class JournalFilesRepo implements JournalRepoInterface{
             }
         } else {
             return context.getCacheDir();
-        }
+        }*/
 
     }
 
