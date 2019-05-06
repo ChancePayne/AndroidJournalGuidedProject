@@ -1,6 +1,8 @@
 package com.lambdaschool.journalguidedproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import org.json.JSONException;
@@ -67,6 +69,15 @@ public class JournalFilesRepo implements JournalRepoInterface{
         } else {
             return false;
         }
+    }
+
+    public void createImage(byte[] bytes, String name) {
+        writeToFile(name, bytes);
+    }
+
+    public Bitmap readImage(String name) {
+//        return readFromFileBytes(name);
+        return BitmapFactory.decodeFile(name);
     }
 
     private File getStorageDirectory() {

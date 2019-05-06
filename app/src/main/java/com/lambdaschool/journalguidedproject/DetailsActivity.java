@@ -41,11 +41,15 @@ public class DetailsActivity extends BaseActivity {
     private SeekBar   dayRatingView;
     private ImageView dayImageView;
 
+    private JournalStorageManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_detail);
+
+        manager = new JournalStorageManager(this);
 
 //        createJournalEntry();
         Intent intent = getIntent();
@@ -100,10 +104,14 @@ public class DetailsActivity extends BaseActivity {
         });
 
         dayImageView = findViewById(R.id.journal_entry_image);
-        final Uri imageUri = entry.getImage();
+        /*final Uri imageUri = entry.getImage();
         if(imageUri != null) {
             // TODO: use file I/O to read image from path
 //            dayImageView.setImageURI(imageUri);
+        }*/
+        final Bitmap bitmap = manager.readImage(entry);
+        if(bitmap != null) {
+            dayImageView.setImageBitmap(bitmap);
         }
 
         findViewById(R.id.add_image_button).setOnClickListener(new View.OnClickListener() {
@@ -138,21 +146,7 @@ public class DetailsActivity extends BaseActivity {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),dataUri);
 
-                    // write to file
-                    File bitmapWriteFile = new File(this.getFilesDir(), entry.getFbId());
-
-                    // get bitmap bytes
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
-                    final byte[] bytes = stream.toByteArray();
-                    bitmap.recycle();
-
-                    final String     path             = bitmapWriteFile.getPath();
-                    FileOutputStream fileOutputStream = new FileOutputStream(path);
-
-                    fileOutputStream.write(bytes);
-                    fileOutputStream.close();
-
+                    manager.storeImage(bitmap, entry);
 
                 } catch (IOException e) {
                     e.printStackTrace();

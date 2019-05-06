@@ -2,6 +2,7 @@ package com.lambdaschool.journalguidedproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,6 +103,16 @@ public class JournalSharedPrefsRepository implements JournalRepoInterface{
     @Override
     public void deleteEntry(JournalEntry entry) {
         // TODO: Add delete
+    }
+
+    @Override
+    public void createImage(byte[] bytes, String name) {
+
+    }
+
+    @Override
+    public Bitmap readImage(String name) {
+        return null;
     }
 
 

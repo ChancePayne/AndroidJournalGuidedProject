@@ -1,7 +1,12 @@
 package com.lambdaschool.journalguidedproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 // S03M03-3 Create Manager class and replace all references to repository with this class
@@ -58,5 +63,33 @@ public class JournalStorageManager {
     public void deleteEntry(JournalEntry entry) {
         JournalFirebaseDAO.deleteEntry(entry);
         // TODO: ADD DELETE
+    }
+
+
+    public void storeImage(Bitmap bitmap, JournalEntry entry) {
+        // get bitmap bytes
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+        final byte[] bytes = stream.toByteArray();
+
+        repo.createImage(bytes, getImageName(entry));
+
+        bitmap.recycle();
+    }
+
+    private String getImageName(JournalEntry entry) {
+        return entry.getDate() + ".jpeg";
+    }
+
+    public Bitmap readImage(JournalEntry entry) {
+        return repo.readImage(getImageName(entry));
+        /*final byte[] primitiveBytes = new byte[bytes.length];
+        int index = 0;
+        for(Byte b: bytes) {
+            primitiveBytes[index++] = b;
+        }
+
+        final Bitmap bitmap = BitmapFactory.decodeByteArray(primitiveBytes, 0, bytes.length);
+        return bitmap;*/
     }
 }
