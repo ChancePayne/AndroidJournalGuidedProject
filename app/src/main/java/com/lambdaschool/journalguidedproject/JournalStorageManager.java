@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 // S03M03-3 Create Manager class and replace all references to repository with this class
 public class JournalStorageManager {
@@ -27,7 +28,8 @@ public class JournalStorageManager {
 
         journalEntries.addAll(cacheEntries);
         for (JournalEntry entry: networkEntries) {
-            if(!journalEntries.contains(entry)) {
+            if(!checkForEntry(entry, journalEntries)) {
+//            if(!journalEntries.contains(entry)) {
                 journalEntries.add(entry);
             }
         }
@@ -36,11 +38,11 @@ public class JournalStorageManager {
             @Override
             public void run() {
                 for(JournalEntry entry: journalEntries) {
-                    if(!networkEntries.contains(entry)) {
+                    if(!checkForEntry(entry, networkEntries)) {
                         JournalFirebaseDAO.createEntry(entry);
                     }
 
-                    if(!cacheEntries.contains(entry)) {
+                    if(!checkForEntry(entry, cacheEntries)) {
                         repo.createEntry(entry);
                     }
                 }
@@ -48,6 +50,15 @@ public class JournalStorageManager {
         }).start();
 
         return journalEntries;
+    }
+
+    public boolean checkForEntry(JournalEntry entry, List<JournalEntry> list) {
+        for(int i = 0; i < list.size(); ++i) {
+            if(entry.getDate() == list.get(i).getDate()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void createEntry(JournalEntry entry) {

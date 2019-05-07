@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,15 +35,91 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
 
     @Override
     // S02M02-8 bind an element from our list of data to the provided viewholder
-    public void onBindViewHolder(@NonNull JournalEntryViewHolder journalEntryViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final JournalEntryViewHolder journalEntryViewHolder, int i) {
         final JournalEntry data = entryData.get(i);
 
-        journalEntryViewHolder.entryDateView.setText(data.getStringDate());
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // entryTextView process entry text
+                /*final String entryText;
+                if (data.getEntryText() != null && data.getEntryText().length() > 0) {
+                    final String substring = data.getEntryText().substring(
+                            0,
+                            data.getEntryText().length() > 30 ? 30 : data.getEntryText().length() - 1);
+                    entryText = substring + "...";
+                } else {
+                    entryText = "";
+                }*/
+                // entryDateView; date as string
+                final String dateText = data.getStringDate();
+                // ImageView entryRatingView; image
+                // parentLayout; background color
+                final Drawable emojiDrawable;
+                final int backgroundColor;
+                switch (data.getDayRating()) {
+                    case 0:
+                        emojiDrawable = journalEntryViewHolder.context.getDrawable(R.drawable.emoji_0);
+                        backgroundColor = journalEntryViewHolder.context.getResources().getColor(R.color.moodGradient0);
+                        break;
+                    case 1:
+                        emojiDrawable = journalEntryViewHolder.context.getDrawable(R.drawable.emoji_1);
+                        backgroundColor = journalEntryViewHolder.context.getResources().getColor(R.color.moodGradient1);
+                        break;
+                    case 2:
+                        emojiDrawable = journalEntryViewHolder.context.getDrawable(R.drawable.emoji_2);
+                        backgroundColor = journalEntryViewHolder.context.getResources().getColor(R.color.moodGradient2);
+                        break;
+                    case 3:
+                        emojiDrawable = journalEntryViewHolder.context.getDrawable(R.drawable.emoji_3);
+                        backgroundColor = journalEntryViewHolder.context.getResources().getColor(R.color.moodGradient3);
+                        break;
+                    case 4:
+                        emojiDrawable = journalEntryViewHolder.context.getDrawable(R.drawable.emoji_4);
+                        backgroundColor = journalEntryViewHolder.context.getResources().getColor(R.color.moodGradient4);
+                        break;
+                    case 5:
+                        emojiDrawable = journalEntryViewHolder.context.getDrawable(R.drawable.emoji_5);
+                        backgroundColor = journalEntryViewHolder.context.getResources().getColor(R.color.moodGradient5);
+                        break;
+                    default:
+                        emojiDrawable = journalEntryViewHolder.context.getDrawable(R.drawable.emoji_0);
+                        backgroundColor = journalEntryViewHolder.context.getResources().getColor(android.R.color.white);
+                }
+                // parentView, on click listener
+                /*final View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent editIntent = new Intent(v.getContext(), DetailsActivity.class);
+                        editIntent.putExtra(JournalEntry.TAG, data);
+                        ((Activity) v.getContext()).startActivityForResult(
+                                editIntent,
+                                JournalListActivity.EDIT_ENTRY_REQUEST);
+                    }
+                };*/
+
+                ((Activity) journalEntryViewHolder.context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        journalEntryViewHolder.entryTextView.setText(entryText);
+                        journalEntryViewHolder.entryDateView.setText(dateText);
+                        journalEntryViewHolder.entryRatingView.setImageDrawable(emojiDrawable);
+                        journalEntryViewHolder.parentLayout.setBackgroundColor(backgroundColor);
+//                        journalEntryViewHolder.parentView.setOnClickListener(onClickListener);
+                    }
+                });
+
+            }
+        }, "PreparingViewData").start();
+
+
+//        journalEntryViewHolder.entryDateView.setText(data.getStringDate());
 //        journalEntryViewHolder.entryRatingView.setText(Integer.toString(data.getDayRating()));
 
         // S02M02-12 Change background color based on the day's rating
         // S02M03-1 Extract hard coded colors into resources
-        switch (data.getDayRating()) {
+        /*switch (data.getDayRating()) {
             case 0:
                 journalEntryViewHolder.parentLayout.setBackgroundColor(
                         journalEntryViewHolder.context.getResources().getColor(R.color.moodGradient0));
@@ -91,7 +168,7 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
             case 5:
                 journalEntryViewHolder.entryRatingView.setImageDrawable(journalEntryViewHolder.context.getDrawable(R.drawable.emoji_5));
                 break;
-        }
+        }*/
 
         if (data.getEntryText() != null && data.getEntryText().length() > 0) {
             final String substring = data.getEntryText().substring(
@@ -100,7 +177,7 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
             journalEntryViewHolder.entryTextView.setText(substring + "...");
         }
 
-        journalEntryViewHolder.parentView.setOnClickListener(new View.OnClickListener() {
+        final View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent editIntent = new Intent(v.getContext(), DetailsActivity.class);
@@ -109,7 +186,8 @@ public class JournalListAdapter extends RecyclerView.Adapter<JournalListAdapter.
                         editIntent,
                         JournalListActivity.EDIT_ENTRY_REQUEST);
             }
-        });
+        };
+        journalEntryViewHolder.parentView.setOnClickListener(onClickListener);
     }
 
     @Override

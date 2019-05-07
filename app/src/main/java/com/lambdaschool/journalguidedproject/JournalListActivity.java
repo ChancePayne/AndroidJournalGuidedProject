@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
+import android.os.Trace;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -89,6 +91,16 @@ public class JournalListActivity extends BaseActivity {
             }
         });
 
+
+
+
+//        addTestEntries();
+//        new AddSampleDataAsync().execute(data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -104,6 +116,8 @@ public class JournalListActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+//                        Debug.startMethodTracing("InitRecyclerView");
+                        Trace.beginSection("InitRecyclerView");
                         // bind a new handle to our recycler view
                         RecyclerView recyclerView = findViewById(R.id.journal_recycler_view);
 
@@ -114,14 +128,12 @@ public class JournalListActivity extends BaseActivity {
                         // this will manage how the items in the view are laid out
                         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                         recyclerView.setLayoutManager(layoutManager);
+                        Trace.endSection();
+//                        Debug.stopMethodTracing();
                     }
                 });
             }
-        }).start();
-
-
-//        addTestEntries();
-//        new AddSampleDataAsync().execute(data);
+        }, "GetList").start();
     }
 
     // S02M04-8 schedule a broadcast to display our notification periodically
